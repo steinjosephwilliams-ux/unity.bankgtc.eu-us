@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Transfer - Unity Bank</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Send Money</h2>
+  <form id="transfer-form">
+    <input type="text" id="recipient_id" placeholder="Recipient Account ID" required>
+    <input type="number" id="amount" placeholder="Amount" required>
+    <input type="text" id="description" placeholder="Description (optional)">
+    <button type="button" onclick="
+      supabase.auth.getUser().then(({data: {user}}) => {
+        if(user) transferFunds(user.id, document.getElementById('recipient_id').value, parseFloat(document.getElementById('amount').value), document.getElementById('description').value);
+      });
+    ">Send Money</button>
+  </form>
+  <button onclick="logout()">Logout</button>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>

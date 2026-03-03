@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard - Unity Bank</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Admin Dashboard</h2>
+  <div id="users-list"></div>
+  <div id="transactions-list"></div>
+  <button onclick="logout()">Logout</button>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script>
+    // Load all users
+    supabase.auth.getUser().then(({data:{user}})=>{
+      if(!user) window.location.href='login.html';
+      else{
+        supabase.from('profiles').select('*').then(({data,error})=>{
+          const ul=document.getElementById('users-list');
+          if(error){ ul.innerHTML=error.message; return; }
+          ul.innerHTML='<h3>All Users</h3>';
+          data.forEach(u=>{ ul.innerHTML+=`<p>${u.full_name} - ${u.email} - ${u.role}</p>` });
+        });
+
+        supabase.from('transactions').select('*').then(({data,error})=>{
+          const ul=document.getElementById('transactions-list');
+          if(error){ ul.innerHTML=error.message; return; }
+          ul.innerHTML+='<h3>All Transactions</h3>';
+          data.forEach(t=>{ ul.innerHTML+=`<p>${t.sender_id} → ${t.recipient_id}: ${t.amount}</p>` });
+        });
+      }
+    });
+  </script>
+</body>
+</html>

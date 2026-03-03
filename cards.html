@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cards - Unity Bank</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Your Cards</h2>
+  <div id="cards-list">
+    <!-- JS will load user's cards here -->
+  </div>
+  <button onclick="logout()">Logout</button>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script>
+    // Load user's cards
+    supabase.auth.getUser().then(({data:{user}})=>{
+      if(user){
+        supabase.from('cards').select('*').eq('user_id', user.id).then(({data,error})=>{
+          const list = document.getElementById('cards-list');
+          if(error){ list.innerHTML = error.message; return; }
+          if(data.length===0) list.innerHTML='No cards yet';
+          else data.forEach(c=>{ list.innerHTML+=`<p>${c.card_type}: ${c.card_number} (Status: ${c.status})</p>` });
+        });
+      } else window.location.href='login.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile - Unity Bank</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Your Profile</h2>
+  <div id="profile-info"></div>
+  <button onclick="logout()">Logout</button>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script>
+    supabase.auth.getUser().then(({data:{user}})=>{
+      if(!user) window.location.href='login.html';
+      else supabase.from('profiles').select('*').eq('id', user.id).single().then(({data,error})=>{
+        if(error){ document.getElementById('profile-info').innerHTML=error.message; return; }
+        document.getElementById('profile-info').innerHTML=`
+          <p>Name: ${data.full_name}</p>
+          <p>Email: ${data.email}</p>
+          <p>Phone: ${data.phone}</p>
+          <p>Account Type: ${data.account_type}</p>
+          <p>Currency: ${data.preferred_currency}</p>
+        `;
+      });
+    });
+  </script>
+</body>
+</html>

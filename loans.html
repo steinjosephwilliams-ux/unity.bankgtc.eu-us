@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Loans - Unity Bank</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Loan Application</h2>
+  <form id="loan-form">
+    <input type="number" id="loan-amount" placeholder="Loan Amount" required>
+    <input type="date" id="due-date" placeholder="Due Date" required>
+    <button type="button" onclick="
+      supabase.auth.getUser().then(({data: {user}}) => {
+        if(user) supabase.from('loans').insert([{user_id: user.id, amount: parseFloat(document.getElementById('loan-amount').value), due_date: document.getElementById('due-date').value}])
+        .then(({error}) => { if(error) alert(error.message); else alert('Loan applied successfully'); });
+      });
+    ">Apply for Loan</button>
+  </form>
+  <button onclick="logout()">Logout</button>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>

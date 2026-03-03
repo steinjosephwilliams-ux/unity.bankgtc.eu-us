@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Transactions - Unity Bank</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Transaction History</h2>
+  <table border="1" id="transactions-table">
+    <tr>
+      <th>Sender</th>
+      <th>Recipient</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Date</th>
+    </tr>
+  </table>
+  <button onclick="logout()">Logout</button>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script>
+    // Load transactions for current user
+    supabase.auth.getUser().then(({data: {user}}) => {
+      if(user) loadTransactions(user.id);
+      else window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
